@@ -21,7 +21,8 @@
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "typeit-react": "^2.7.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.42.1",

@@ -1,8 +1,8 @@
 import { Noto_Sans_KR } from "next/font/google";
 
+import { LayoutProps } from "@/.next/types/app/layout";
 import { cn } from "@/lib/utils";
-import { PropsWithChildren } from "react";
-import { ThemeProvider } from "next-themes";
+import NextThemeProvider from "@/providers/NextThemeProvider";
 import ReactQueryProviders from "@/providers/ReactQueryProvider";
 
 const fontSans = Noto_Sans_KR({
@@ -11,28 +11,18 @@ const fontSans = Noto_Sans_KR({
   variable: "--font-sans",
 });
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default function RootLayout({ children }: LayoutProps) {
   return (
-    <html
-      lang="ko-KR"
-      suppressHydrationWarning
-    >
+    <html lang="ko-KR" suppressHydrationWarning>
       <head />
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.className
+          fontSans.className,
         )}
       >
         <ReactQueryProviders>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
+          <NextThemeProvider>{children}</NextThemeProvider>
         </ReactQueryProviders>
       </body>
     </html>

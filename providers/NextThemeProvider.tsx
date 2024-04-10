@@ -6,7 +6,7 @@ function NextThemeProvider({ children }: PropsWithChildren) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="light"
       enableSystem
       disableTransitionOnChange
     >

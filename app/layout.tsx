@@ -1,14 +1,11 @@
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 
 import { Noto_Sans_KR } from "next/font/google";
 
-import Footer from "@/components/footer/footer";
 import { cn } from "@/lib/utils";
 import NextThemeProvider from "@/providers/NextThemeProvider";
 import ReactQueryProviders from "@/providers/ReactQueryProvider";
 import "@/styles/globals.css";
-
-import Header from "../components/header/header";
 
 const fontSans = Noto_Sans_KR({
   subsets: ["latin"],
@@ -16,7 +13,11 @@ const fontSans = Noto_Sans_KR({
   variable: "--font-sans",
 });
 
-export default function RootLayout({ children }: PropsWithChildren) {
+interface RootLayoutProps extends PropsWithChildren {
+  loginModal: React.ReactNode;
+}
+
+export default function RootLayout({ children, loginModal }: RootLayoutProps) {
   return (
     <html
       lang="ko-KR"
@@ -32,10 +33,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <ReactQueryProviders>
           <NextThemeProvider>
             <div className="flex flex-col min-h-screen">
-              <Header />
-              <Suspense fallback={<div>loading...</div>}>{children}</Suspense>
-              <div className="flex-grow"></div>
-              <Footer />
+              {loginModal}
+              {children}
+              <div id="modal-root" />
             </div>
           </NextThemeProvider>
         </ReactQueryProviders>

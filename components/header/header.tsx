@@ -1,27 +1,20 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { cn } from "@/lib/utils";
 import logo from "@/public/logo_dark.png";
 
 import { useHeaderProgressStore } from "../../store/header-progress-store";
 import HeaderProgress from "./header-progress";
 
 function Header() {
-  const { theme } = useTheme();
   const { isShow, scrollProgress } = useHeaderProgressStore();
 
   return (
     <div className="header-h">
-      <div
-        className={cn(
-          "w-screen header-h fixed shadow-md",
-          theme === "dark" ? "bg-black" : "bg-white",
-        )}
-      >
+      <div className="w-screen header-h fixed shadow-md bg-white dark:bg-black">
         <div className="flex justify-center items-center w-screen header-h px-4 z-header">
           <div className="w-[200px] h-full">
             <a href="/">
@@ -36,8 +29,8 @@ function Header() {
           </div>
           <div className="flex-grow" />
           <div className="flex font-bold text-lg gap-6">
-            <span>Posts</span>
-            <span>Profile</span>
+            <Link href="/post">Posts</Link>
+            <Link href="/login">Login</Link>
           </div>
         </div>
         {isShow && <HeaderProgress value={scrollProgress} />}

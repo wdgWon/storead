@@ -1,5 +1,5 @@
 function Post() {
-  return <></>;
+  return null;
 }
 
 export default Post;

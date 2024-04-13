@@ -1,9 +1,5 @@
-export async function delay() {
-  await new Promise((resolver) => setTimeout(resolver, 2000));
-  return "msg loaded";
-}
+import DefaultLayout from "@/components/default-layout/default-layout";
 
-export default async function Home() {
-  const msg = await delay();
-  return <div className="h-8">{msg}</div>;
+export default async function RootPage() {
+  return <DefaultLayout />;
 }

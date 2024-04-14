@@ -35,7 +35,7 @@
     --radius: 0.5rem;
 
     /* FIXME: px을 rem으로 변경 필요 */
-    --header-height: 120px;
+    --header-height: 80px;
     --footer-height: 120px;
     --logo-width: 200px;
   }

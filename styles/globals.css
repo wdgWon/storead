@@ -37,6 +37,7 @@
     /* FIXME: px을 rem으로 변경 필요 */
     --header-height: 120px;
     --footer-height: 120px;
+    --logo-width: 200px;
   }
 
   .dark {

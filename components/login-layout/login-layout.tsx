@@ -11,12 +11,22 @@ function LoginLayout() {
         <Separator />
         <Button
           type="button"
-          variant="default"
+          variant="outline"
         >
           구글로 로그인
         </Button>
-        <Button type="button">카카오로 로그인</Button>
-        <Button type="button">깃헙으로 로그인</Button>
+        <Button
+          type="button"
+          variant="outline"
+        >
+          카카오로 로그인
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+        >
+          깃헙으로 로그인
+        </Button>
       </div>
     </div>
   );

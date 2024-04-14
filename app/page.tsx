@@ -1,5 +1,5 @@
 import DefaultLayout from "@/components/default-layout/default-layout";
 
-export default async function RootPage() {
+export default function RootPage() {
   return <DefaultLayout />;
 }

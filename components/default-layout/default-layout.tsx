@@ -2,8 +2,11 @@
 
 import { PropsWithChildren } from "react";
 
-import Footer from "@/components/footer/footer";
+import dynamic from "next/dynamic";
+
 import Header from "@/components/header/header";
+
+const Footer = dynamic(() => import("@/components/footer/footer"));
 
 function DefaultLayout({ children }: PropsWithChildren) {
   return (

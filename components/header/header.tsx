@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useHeaderProgressStore } from "../../store/header-progress-store";
 import HeaderProgress from "./header-progress";
 
-const Logo = dynamic(() => import("./logo"), { ssr: false });
+const Logo = dynamic(() => import("../logo"), { ssr: false });
 const ThemeSwitch = dynamic(() => import("./theme-switch"), { ssr: false });
 
 function Header() {

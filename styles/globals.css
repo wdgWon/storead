@@ -77,4 +77,9 @@
   .footer-h {
     height: var(--footer-height);
   }
+
+  .main-content {
+    width: 100vw;
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+  }
 }

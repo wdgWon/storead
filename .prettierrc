@@ -1,6 +1,7 @@
 {
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
+    "server-only",
     "^react(.*)",
     "<THIRD_PARTY_MODULES>",
     "^@tanstack/(.*)$",

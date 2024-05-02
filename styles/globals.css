@@ -34,7 +34,6 @@
 
     --radius: 0.5rem;
 
-    /* FIXME: px을 rem으로 변경 필요 */
     --header-height: 80px;
     --footer-height: 120px;
     --logo-width: 200px;
@@ -81,5 +80,14 @@
   .main-content {
     width: 100vw;
     height: calc(100vh - var(--header-height) - var(--footer-height));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

@@ -31,7 +31,11 @@ export default function RootLayout({ children, loginModal }: RootLayoutProps) {
         )}
       >
         <ReactQueryProviders>
-          <NextThemeProvider>
+          <NextThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+          >
             <div className="flex flex-col min-h-screen">
               {loginModal}
               {children}

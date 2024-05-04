@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import TypeIt from "typeit-react";
 
-import BookSearch from "../book-search/book-search";
+import BookSearch from "../book-search/book-search-form";
 
 function MainLayout() {
   return (

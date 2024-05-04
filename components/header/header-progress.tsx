@@ -1,18 +1,21 @@
 "use client";
 
 import { Progress } from "@/components/ui/progress";
+import { useHeaderProgressStore } from "@/store/header-progress-store";
 
-interface HeaderProgressProps {
-  value: number;
-}
+function HeaderProgress() {
+  const { isShow, scrollProgress } = useHeaderProgressStore();
 
-function HeaderProgress({ value }: HeaderProgressProps) {
   return (
-    <Progress
-      value={value}
-      className="w-full h-2 bg-slate-400"
-      indicatorColor="bg-blue-300"
-    />
+    <>
+      {isShow && (
+        <Progress
+          value={scrollProgress}
+          className="w-full h-2 bg-slate-400"
+          indicatorColor="bg-blue-300"
+        />
+      )}
+    </>
   );
 }
 

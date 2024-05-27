@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/naver/books/:path*",
+        destination: "https://openapi.naver.com/v1/search/book.json/:path*",
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

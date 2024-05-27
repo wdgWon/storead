@@ -2,14 +2,11 @@
 
 import { ChangeEvent, useEffect, useState } from "react";
 
-import useDebounce from "@/hooks/useDebounce";
-
-import { useBookSearchMutation } from "./mutation";
+import { useBookSearchMutation } from "../mutation";
 
 export const useBookSearch = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [inputValue, setInputValue] = useState("");
-  // const debouncedValue = useDebounce(inputValue, 1000);
   const { mutate, isPending, data: bookList } = useBookSearchMutation();
 
   const handleOnFocus = () => {

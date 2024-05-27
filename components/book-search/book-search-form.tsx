@@ -1,9 +1,9 @@
 "use client";
 
+import BookCardSkeleton from "../book-card/book-card-skeleton";
 import { Input } from "../ui/input";
-import BookCardSkeleton from "./components/book-card/book-card-skeleton";
 import BookSearchList from "./components/book-search-list";
-import { useBookSearch } from "./useBookSearch";
+import { useBookSearch } from "./hooks/useBookSearch";
 
 //TODO: handleBookSearch 디바운싱
 function BookSearch() {

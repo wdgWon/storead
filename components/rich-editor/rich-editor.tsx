@@ -1,36 +1,22 @@
 "use client";
 
-import { RefObject } from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StartKit from "@tiptap/starter-kit";
 
-import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import { Editor, EditorProps } from "@toast-ui/react-editor";
-import { useTheme } from "next-themes";
-
-interface Props extends EditorProps {
-  editorRef: RefObject<Editor> | null;
-  imageHandler?: (blob: File, callback: typeof Function) => void;
+interface Props {
   content?: string;
 }
 
-function RichEditor({ content, editorRef, imageHandler, ...props }: Props) {
-  const { theme } = useTheme();
-
+function RichEditor({ content = "", ...props }: Props) {
+  const editor = useEditor({
+    extensions: [StartKit],
+    content,
+  });
   return (
-    <div
-      className={`editor-panel-editor${theme == "dark" ? " toastui-editor-dark" : ""}`}
-    >
-      <Editor
-        {...props}
-        ref={editorRef}
-        initailValue={content ?? ""}
-        previewStyle="vertical"
-        height="600px"
-        initialEditType="markdown"
-        useCommandShortcut={true}
-        hooks={imageHandler ? { addImageBlobHook: imageHandler } : {}}
-      />
-    </div>
+    <EditorContent
+      editor={editor}
+      {...props}
+    />
   );
 }
 

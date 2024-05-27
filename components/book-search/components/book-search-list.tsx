@@ -2,7 +2,7 @@
 
 import { BookDetail } from "api-domain";
 
-import BookCard from "./book-card/book-card";
+import { BookCard } from "../../book-card";
 
 interface BookSearchListProps {
   bookList: BookDetail[];
@@ -16,7 +16,9 @@ function BookSearchList({ bookList }: BookSearchListProps) {
           key={`${item.isbn}/${idx}`}
           className="rounded-lg hover:shadow-lg transition-colors"
         >
-          <BookCard {...item} />
+          <BookCard {...item}>
+            <BookCard.ButtonGroup {...item} />
+          </BookCard>
         </li>
       ))}
     </ul>

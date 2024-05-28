@@ -3,6 +3,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/api/v1/:path*",
+        destination: `${process.env.NEXT_BASE_URL}/:path*`,
+      },
+      {
         source: "/naver/books/:path*",
         destination: "https://openapi.naver.com/v1/search/book.json/:path*",
       },

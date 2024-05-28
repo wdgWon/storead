@@ -2,17 +2,13 @@
 
 import Link from "next/link";
 
-import { useQuery } from "@tanstack/react-query";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { QUERY_KEY } from "@/constants/queryKey";
-import { tokenVerify } from "@/lib/apis/auth/tokenVerify";
 
 function AuthMenu() {
-  const { data: user } = useQuery({
-    queryKey: [QUERY_KEY.AUTH],
-    queryFn: tokenVerify,
-  });
+  //FIXME: api 연동 후 useQuery로 수정
+  const user = {
+    image_url: "https://picsum.photos/200/300",
+  };
 
   return (
     <>

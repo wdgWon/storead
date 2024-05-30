@@ -12,7 +12,7 @@ function AuthMenu() {
 
   return (
     <>
-      {user ? (
+      {/* {user ? (
         <Avatar>
           <AvatarImage
             src={user.image_url}
@@ -21,8 +21,8 @@ function AuthMenu() {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ) : (
-        <Link href="/login">Login</Link>
-      )}
+      )} */}
+      <Link href="/login">Login</Link>
     </>
   );
 }

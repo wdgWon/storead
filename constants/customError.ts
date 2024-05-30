@@ -5,3 +5,11 @@ export class LogoutError {
     this.error = err;
   }
 }
+
+export class UnauthorizedError {
+  error = new Error();
+  message = "platform unauthorized user";
+  constructor(err: Error) {
+    this.error = err;
+  }
+}

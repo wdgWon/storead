@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import CommingSoonLayout from "@/components/comming-soon-layout/comming-soon-layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <main
+          style={{
+            fontFamily: "Arial, sans-serif",
+            backgroundColor: "#f5f5f5",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            margin: 0,
+          }}
+        >
+          <CommingSoonLayout />
+        </main>
+      </body>
     </html>
   );
 }

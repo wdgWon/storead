@@ -4,15 +4,17 @@ import { useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 
+import { authConnectionsGoogleRetrieve } from "@/api/generated/domain";
+
 function LoadPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchFn = async () => {
-      const res = await fetch(
-        `/api/v1/auth/connections/google?code=${searchParams.get("code")}`,
-      );
-      console.log(JSON.stringify(res.json));
+      // const res = await fetch(
+      //   `/api/v1/auth/connections/google?code=${searchParams.get("code")}`,
+      // );
+      // console.log(JSON.stringify(res.json));
     };
     fetchFn();
   }, [searchParams]);

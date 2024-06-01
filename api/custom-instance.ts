@@ -2,17 +2,13 @@ import { ACCESS_TOKEN } from "@/constants/identifier";
 import { getClientCookies } from "@/lib/getClientCookies";
 import { getServerCookies } from "@/lib/getServerCookies";
 
-type CustomInstanceOptions = {
-  isAuth?: boolean;
-};
-
 export const customInstance = async <T>({
   url,
   method,
   params,
   headers = {},
   data,
-  options,
+  includeAuth = true,
 }: {
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -20,12 +16,12 @@ export const customInstance = async <T>({
   data?: Record<string, any>;
   headers?: Record<string, any>;
   signal?: Record<string, any>;
-  options?: CustomInstanceOptions;
+  includeAuth?: boolean;
   responseType?: string;
 }): Promise<T> => {
   const baseURL = getBaseURL();
 
-  if (options?.isAuth) {
+  if (includeAuth) {
     const accessToken = await getAccessToken();
     if (accessToken) {
       headers.Authorization = `Bearer ${accessToken}`;

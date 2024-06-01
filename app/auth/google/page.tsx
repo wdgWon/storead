@@ -1,3 +1,5 @@
+import { authConnectionsGoogleRetrieve } from "@/api/generated/domain";
+
 import LoadPage from "./load-page";
 
 async function AuthGooglePage({
@@ -5,9 +7,14 @@ async function AuthGooglePage({
   searchParams,
 }: {
   params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: URLSearchParams;
 }) {
-  return <LoadPage />;
+  const selializedSearch = new URLSearchParams(searchParams).toString();
+  const res = await authConnectionsGoogleRetrieve({
+    code: selializedSearch,
+  });
+
+  return <div>{JSON.stringify(res)}</div>;
 }
 
 export default AuthGooglePage;

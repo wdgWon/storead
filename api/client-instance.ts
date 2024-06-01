@@ -1,9 +1,10 @@
-// "use server"
-import { cookies } from "next/headers";
+"use client";
+
+import { getAccessToken } from "@/lib/utils";
 
 import { CustomInstanceOptions } from "./type";
 
-export const serverInstance = async <T>({
+export const clientInstance = async <T>({
   url,
   method,
   params,
@@ -20,16 +21,18 @@ export const serverInstance = async <T>({
   const headers: Record<string, string> = {};
 
   if (options?.includeAuth) {
-    const accessToken = cookies().get("access_token");
+    const accessToken = getAccessToken();
     if (accessToken) {
       headers.Authorization = `Bearer ${accessToken}`;
     }
   }
+
   const response = await fetch(
-    // next 서버에서 요청하기 때문에 next.config의 rewrites 없이 보내야돼서 정확한 baseUrl 기입 필요
-    `${process.env.BASE_URL}${url}` + new URLSearchParams(params),
+    // next.config의 rewrites로 cors를 우회해야하기 때문에 variable url만 기입
+    `${process.env.NEXT_VARIABLE_URL}${url}` + new URLSearchParams(params),
     {
       method,
+      headers,
       ...(data ? { body: JSON.stringify(data) } : {}),
     },
   );
@@ -37,25 +40,20 @@ export const serverInstance = async <T>({
   return response.json();
 };
 
-export default serverInstance;
-// import Axios, { AxiosRequestConfig } from "axios";
-// import Cookies from "js-cookie";
+export default clientInstance;
 
-// export const SERVER_INSTANCE = Axios.create({
-//   baseURL: process.env.VARIABLE_URL,
+// import Axios, { AxiosRequestConfig } from "axios";
+
+// export const AXIOS_INSTANCE = Axios.create({
+//   baseURL: process.env.NEXT_VARIABLE_URL,
 // });
 
-// export const serverInstance = <T>(
+// export const clientInstance = <T>(
 //   config: AxiosRequestConfig,
 //   options?: AxiosRequestConfig,
 // ): Promise<T> => {
 //   const source = Axios.CancelToken.source();
-//   // const header = options && options.headers
-//   // ? {
-//   //       Authorization: `Bearer ${Cookies.get("access_token")}`,
-//   //     } : null,
-
-//   const promise = SERVER_INSTANCE({
+//   const promise = AXIOS_INSTANCE({
 //     ...config,
 //     ...options,
 //     cancelToken: source.token,

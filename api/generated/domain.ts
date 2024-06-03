@@ -229,12 +229,10 @@ export const authTokensRefreshRetrieve = () => {
 information about a token's fitness for a particular use.
  * @summary 토큰 검증 API
  */
-export const authTokensVerifyCreate = (tokenVerify: TokenVerify) => {
+export const authTokensVerifyCreate = () => {
   return customInstance<TokenVerify>({
     url: `/api/v1/auth/tokens/verify`,
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    data: tokenVerify,
   });
 };
 

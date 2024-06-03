@@ -6,9 +6,4 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type AuthConnectionsGithubRetrieveParams = {
-  /**
-   * 깃허브 플랫폼 서버 인가 코드
-   */
-  code: string;
-};
+export type AuthConnectionsGithubRetrieveParams = URLSearchParams;

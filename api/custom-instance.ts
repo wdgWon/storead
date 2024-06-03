@@ -1,6 +1,9 @@
+import { LogoutError } from "@/constants/customError";
 import { ACCESS_TOKEN } from "@/constants/identifier";
 import { getClientCookies } from "@/lib/getClientCookies";
 import { getServerCookies } from "@/lib/getServerCookies";
+
+import { authTokensVerifyCreate } from "./generated/domain";
 
 export const customInstance = async <T>({
   url,
@@ -28,21 +31,57 @@ export const customInstance = async <T>({
     }
   }
 
-  const response = await fetch(
-    `${baseURL}${url}` + new URLSearchParams(params),
-    {
-      method,
-      headers,
-      ...(data ? { body: JSON.stringify(data) } : {}),
-    },
-  );
+  try {
+    const response = await fetch(
+      `${baseURL}${url}?${new URLSearchParams(params)}`,
+      {
+        method,
+        headers,
+        ...(data ? { body: JSON.stringify(data) } : {}),
+      },
+    );
 
-  return response.json();
+    if (response.status === 401) {
+      try {
+        await authTokensVerifyCreate();
+        const accessToken = await getAccessToken();
+
+        if (accessToken) {
+          headers.Authorization = `Bearer ${accessToken}`;
+        }
+
+        const currentResponse = await fetch(
+          `${baseURL}${url}?${new URLSearchParams(params)}`,
+          {
+            method,
+            headers,
+            ...(data ? { body: JSON.stringify(data) } : {}),
+          },
+        );
+
+        if (!currentResponse.ok) {
+          throw new LogoutError(new Error("refresh expired"));
+        }
+
+        return currentResponse.json();
+      } catch (error) {
+        throw new LogoutError(error as Error);
+      }
+    }
+
+    if (!response.ok) {
+      throw new Error("api request failed");
+    }
+
+    return response.json();
+  } catch (error) {
+    throw new Error("api request failed");
+  }
 };
 
 const getBaseURL = () => {
   if (typeof window !== "undefined") {
-    return process.env.NEXT_VARIABLE_URL;
+    return "";
   } else {
     return process.env.BASE_URL;
   }

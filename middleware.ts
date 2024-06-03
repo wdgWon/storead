@@ -1,8 +1,11 @@
-import axios from "axios";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// import { authConnectionsGoogleRetrieve } from "./api/generated/domain";
+import {
+  authConnectionsGithubRetrieve,
+  authConnectionsGoogleRetrieve,
+  authConnectionsKakaoRetrieve,
+} from "./api/generated/domain";
 
 /**
  * @description 인증관련 미들웨어
@@ -10,27 +13,34 @@ import type { NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const platform = request.nextUrl.pathname.split("/").at(-1);
   const searchParams = request.nextUrl.searchParams;
-  let response = NextResponse.next();
+
+  const code = searchParams.get("code");
+  if (!code) return NextResponse.next();
 
   switch (platform) {
     case "google": {
-      const code = searchParams.get("code");
-      if (!code) return NextResponse.next();
-
-      const res = await fetch("/api/v1/auth/connections/google", {
-        body: JSON.stringify({ code }),
-      });
+      const res = await authConnectionsGoogleRetrieve(searchParams);
+      console.log(res);
+      break;
+    }
+    case "github": {
+      const res = await authConnectionsGithubRetrieve(searchParams);
+      console.log(res);
+      break;
+    }
+    case "google": {
+      const res = await authConnectionsKakaoRetrieve(searchParams);
       console.log(res);
       break;
     }
     default: {
-      return;
+      break;
     }
   }
 
-  return response;
+  return NextResponse.redirect(new URL("/", request.url));
 }
 
 export const config = {
-  matcher: "/ㅎㄷㅈㅁㅎㄷㅁㅈㅎㅁㅈ/:path*",
+  matcher: "/auth/:path*",
 };

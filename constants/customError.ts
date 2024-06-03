@@ -1,15 +1,17 @@
+export type CatchedError = Error | unknown;
+
 export class LogoutError {
-  error = new Error();
+  error: CatchedError;
   message = "token expired";
-  constructor(err: Error) {
+  constructor(err: CatchedError) {
     this.error = err;
   }
 }
 
 export class UnauthorizedError {
-  error = new Error();
+  error: CatchedError;
   message = "platform unauthorized user";
-  constructor(err: Error) {
+  constructor(err: CatchedError) {
     this.error = err;
   }
 }

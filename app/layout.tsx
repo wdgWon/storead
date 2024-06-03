@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react";
 
 import { Noto_Sans_KR } from "next/font/google";
 
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import NextThemeProvider from "@/providers/NextThemeProvider";
 import ReactQueryProviders from "@/providers/ReactQueryProvider";
@@ -40,6 +41,7 @@ export default function RootLayout({ children, loginModal }: RootLayoutProps) {
             <div className="flex flex-col min-h-screen">
               {loginModal}
               {children}
+              <Toaster />
               <div id="modal-root" />
             </div>
           </NextThemeProvider>

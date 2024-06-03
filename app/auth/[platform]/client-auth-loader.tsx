@@ -2,14 +2,16 @@
 
 import { useEffect, useRef } from "react";
 
-import { useSearchParams } from "next/navigation";
+import { LucideCheckCircle2, LucideCircleX } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 import {
   authConnectionsGithubRetrieve,
   authConnectionsGoogleRetrieve,
   authConnectionsKakaoRetrieve,
 } from "@/api/generated/domain";
-import { UnauthorizedError } from "@/constants/customError";
+import { authMessages } from "@/constants/toastMessages";
 
 import { AuthPlatforms } from "./types";
 
@@ -20,6 +22,8 @@ interface Props {
 function ClientAuthLoader({ platform }: Props) {
   const isMounted = useRef(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
+
   useEffect(() => {
     if (!isMounted.current) {
       isMounted.current = true;
@@ -46,12 +50,26 @@ function ClientAuthLoader({ platform }: Props) {
           break;
         }
         default: {
-          throw new UnauthorizedError(new Error());
+          toast.error(
+            <>
+              <LucideCircleX color="red" />
+              <span className="font-semibold">{authMessages.FAILED}</span>
+            </>,
+          );
+          router.replace("/login");
         }
       }
+
+      toast.success(
+        <>
+          <LucideCheckCircle2 color="green" />
+          <span className="font-semibold">{authMessages.SUCCESS}</span>
+        </>,
+      );
+      router.replace("/");
     };
     fetchAuth();
-  }, [platform, searchParams]);
+  }, [platform, router, searchParams]);
 
   return null;
 }

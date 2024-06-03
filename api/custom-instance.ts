@@ -65,7 +65,7 @@ export const customInstance = async <T>({
 
         return currentResponse.json();
       } catch (error) {
-        throw new LogoutError(error as Error);
+        throw new LogoutError(error);
       }
     }
 

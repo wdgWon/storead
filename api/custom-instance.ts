@@ -1,9 +1,7 @@
-import { LogoutError } from "@/constants/customError";
+import { LogoutError, UnauthorizedError } from "@/constants/customError";
 import { ACCESS_TOKEN } from "@/constants/identifier";
 import { getClientCookies } from "@/lib/getClientCookies";
 import { getServerCookies } from "@/lib/getServerCookies";
-
-import { authTokensVerifyCreate } from "./generated/domain";
 
 export const customInstance = async <T>({
   url,
@@ -24,13 +22,25 @@ export const customInstance = async <T>({
 }): Promise<T> => {
   const baseURL = getBaseURL();
 
+  //인증 필요 요청에 토큰 넣기
   if (includeAuth) {
-    const accessToken = await getAccessToken();
-    if (accessToken) {
-      headers.Authorization = `Bearer ${accessToken}`;
+    let accessToken = getAccessToken();
+
+    //access-token이 없다면 바로 refresh 시도
+    if (!accessToken) {
+      try {
+        await fetch(`/api/v1/auth/tokens/refresh`, {
+          cache: "no-store",
+        });
+        accessToken = getAccessToken();
+      } catch (refreshError) {
+        throw new UnauthorizedError(refreshError);
+      }
     }
+    headers.Authorization = `Bearer ${accessToken}`;
   }
 
+  //오리지널 요청 시도
   try {
     const response = await fetch(
       `${baseURL}${url}?${new URLSearchParams(params)}`,
@@ -38,44 +48,59 @@ export const customInstance = async <T>({
         method,
         headers,
         ...(data ? { body: JSON.stringify(data) } : {}),
+        cache: "no-store",
       },
     );
 
+    //요청에 401 발생시 인증 절차 시작
     if (response.status === 401) {
       try {
-        await authTokensVerifyCreate();
-        const accessToken = await getAccessToken();
+        const refreshResponse = await fetch(`/api/v1/auth/tokens/refresh`, {
+          cache: "no-store",
+        });
 
-        if (accessToken) {
-          headers.Authorization = `Bearer ${accessToken}`;
+        if (!refreshResponse.ok) {
+          throw new LogoutError("refresh failed");
         }
+      } catch (refreshError) {
+        throw new LogoutError(refreshError);
+      }
 
+      //원본 요청 재실행
+      try {
         const currentResponse = await fetch(
           `${baseURL}${url}?${new URLSearchParams(params)}`,
           {
             method,
-            headers,
+            headers: { Authorization: `Bearer ${getAccessToken()}` },
             ...(data ? { body: JSON.stringify(data) } : {}),
+            cache: "no-store",
           },
         );
 
         if (!currentResponse.ok) {
-          throw new LogoutError(new Error("refresh expired"));
+          throw new Error("api request failed");
         }
 
         return currentResponse.json();
       } catch (error) {
-        throw new LogoutError(error);
+        throw error;
       }
     }
 
+    //권한 없음
+    if (response.status === 403) {
+      throw new UnauthorizedError("not allowed service");
+    }
+
+    //이외의 요청 에러 처리
     if (!response.ok) {
       throw new Error("api request failed");
     }
 
     return response.json();
   } catch (error) {
-    throw new Error("api request failed");
+    throw error;
   }
 };
 
@@ -87,7 +112,7 @@ const getBaseURL = () => {
   }
 };
 
-const getAccessToken = async () => {
+const getAccessToken = () => {
   if (typeof window !== "undefined") {
     return getClientCookies(ACCESS_TOKEN);
   } else {

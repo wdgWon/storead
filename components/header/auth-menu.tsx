@@ -2,27 +2,31 @@
 
 import Link from "next/link";
 
+import { useQuery } from "@tanstack/react-query";
+
+import { profilesMeRetrieve } from "@/api/generated/domain";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { QUERY_KEY } from "@/constants/queryKey";
 
 function AuthMenu() {
-  //FIXME: api 연동 후 useQuery로 수정
-  const user = {
-    image_url: "https://picsum.photos/200/300",
-  };
+  const { data: user } = useQuery({
+    queryKey: [QUERY_KEY.MY_PROFILE],
+    queryFn: profilesMeRetrieve,
+  });
 
   return (
     <>
-      {/* {user ? (
+      {user ? (
         <Avatar>
           <AvatarImage
-            src={user.image_url}
+            src={user.profile_photo}
             alt="avatar"
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ) : (
-      )} */}
-      <Link href="/login">Login</Link>
+        <Link href="/login">Login</Link>
+      )}
     </>
   );
 }

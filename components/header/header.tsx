@@ -1,6 +1,7 @@
 "use client";
 
 import Logo from "../logo";
+import VerifiedRenderer from "../verified-renderer/verified-renderer";
 import AuthMenu from "./auth-menu";
 import HeaderProgress from "./header-progress";
 import ThemeSwitch from "./theme-switch";
@@ -15,8 +16,10 @@ function Header() {
           <div className="flex-grow" />
           <div className="flex items-center font-bold text-lg gap-6">
             <ThemeSwitch />
-            <WriteButton />
-            <AuthMenu />
+            <VerifiedRenderer>
+              <WriteButton />
+              <AuthMenu />
+            </VerifiedRenderer>
           </div>
         </div>
         <HeaderProgress />

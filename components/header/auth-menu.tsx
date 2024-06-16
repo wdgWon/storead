@@ -1,25 +1,19 @@
-"use client";
-
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getMyProfile } from "@/lib/apis/profile/myProfile";
 
-function AuthMenu() {
-  //FIXME: api 연동 후 useQuery로 수정
-  const user = {
-    image_url: "https://picsum.photos/200/300",
-  };
+import ProfileDropdown from "./profile-dropdown";
+
+async function AuthMenu() {
+  const user = await getMyProfile();
 
   return (
     <>
       {user ? (
-        <Avatar>
-          <AvatarImage
-            src={user.image_url}
-            alt="avatar"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <ProfileDropdown
+          userId={user.user_id}
+          photo={user.profile_photo}
+        />
       ) : (
         <Link href="/login">Login</Link>
       )}

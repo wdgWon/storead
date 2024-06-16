@@ -1,8 +1,19 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
+
+import { ACCESS_TOKEN } from "@/constants/identifier";
+import { serverVerify } from "@/lib/apis/auth/serverVerify";
 
 import { Button } from "../ui/button";
 
-function WriteButton() {
+async function WriteButton() {
+  const accessToken = cookies().get(ACCESS_TOKEN)?.value;
+  const res = await serverVerify(accessToken);
+
+  if (res.status === 401) {
+    return null;
+  }
+
   return (
     <Link href="/review-form">
       <Button

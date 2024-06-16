@@ -1,3 +1,7 @@
 export const QUERY_KEY = {
   AUTH: "varified",
+  MY_PROFILE: "myProfile",
+  USER_PROFILE: "userProfile",
+  FOLLOWER_LIST: "followerList",
+  FOLLOWING_LIST: "followingList",
 };

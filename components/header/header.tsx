@@ -1,9 +1,4 @@
-"use client";
-
-import Link from "next/link";
-
 import Logo from "../logo";
-import { Button } from "../ui/button";
 import AuthMenu from "./auth-menu";
 import HeaderProgress from "./header-progress";
 import ThemeSwitch from "./theme-switch";

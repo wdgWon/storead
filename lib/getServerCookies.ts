@@ -2,6 +2,6 @@
 
 import { cookies } from "next/headers";
 
-export const getServerCookies = (identifier: string | undefined) => {
-  return identifier === undefined ? cookies() : cookies().get(identifier);
+export const getServerCookies = (identifier: string) => {
+  return cookies().get(identifier)?.value;
 };

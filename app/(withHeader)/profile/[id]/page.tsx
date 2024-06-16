@@ -1,8 +1,10 @@
+import ProfileLayout from "./components/profile-layout";
 import { ProfileProps } from "./type";
 
-// TODO: 프로필 페이지 UI 구현
-function ProfilePage({ params }: ProfileProps) {
-  return <></>;
+async function ProfilePage({ params }: ProfileProps) {
+  const userId = params.id;
+
+  return <ProfileLayout id={userId} />;
 }
 
 export default ProfilePage;

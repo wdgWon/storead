@@ -1,5 +1,3 @@
-"use client";
-
 import { QUERY_KEY } from "@/constants/queryKey";
 
 export const authQueryOption = {

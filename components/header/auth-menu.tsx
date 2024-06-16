@@ -1,29 +1,19 @@
-"use client";
-
 import Link from "next/link";
 
-import { useQuery } from "@tanstack/react-query";
+import { getMyProfile } from "@/lib/apis/profile/myProfile";
 
-import { profilesMeRetrieve } from "@/api/generated/domain";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { QUERY_KEY } from "@/constants/queryKey";
+import ProfileDropdown from "./profile-dropdown";
 
-function AuthMenu() {
-  const { data: user } = useQuery({
-    queryKey: [QUERY_KEY.MY_PROFILE],
-    queryFn: profilesMeRetrieve,
-  });
+async function AuthMenu() {
+  const user = await getMyProfile();
 
   return (
     <>
       {user ? (
-        <Avatar>
-          <AvatarImage
-            src={user.profile_photo}
-            alt="avatar"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <ProfileDropdown
+          userId={user.user_id}
+          photo={user.profile_photo}
+        />
       ) : (
         <Link href="/login">Login</Link>
       )}

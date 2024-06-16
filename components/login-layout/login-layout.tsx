@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { LucideCircleX } from "lucide-react";
 import { toast } from "sonner";
 
-import { LOGIN_REQUIRED } from "@/constants/identifier";
+import { LOGIN_REQUIRED, LOGIN_TOAST } from "@/constants/identifier";
 import { authMessages } from "@/constants/toastMessages";
 
 import Logo from "../logo";
@@ -22,13 +22,13 @@ function LoginLayout() {
       return;
     }
 
-    const isLoginRequired = Cookies.get(LOGIN_REQUIRED);
+    const loginToast = Cookies.get(LOGIN_TOAST);
 
-    if (isLoginRequired) {
-      toast.error(authMessages.LOGIN_REQUIRED, {
+    if (loginToast) {
+      toast.error(loginToast, {
         icon: <LucideCircleX color="red" />,
       });
-      Cookies.remove(LOGIN_REQUIRED);
+      Cookies.remove(LOGIN_TOAST);
     }
   }, []);
 

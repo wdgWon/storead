@@ -1,20 +1,23 @@
+import { FollowList } from "@/api/generated/models";
+
 export interface ProfileProps {
-  params: string;
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export interface ProfileImageProps {
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 export interface UserNameProps {
-  name: string;
+  name?: string;
 }
 
 export interface FollowProps {
-  followers: string[];
-  followings: string[];
+  followers: FollowList;
+  followings: FollowList;
 }
 
 export interface IntroduceProps {
-  introduce: string;
+  introduce?: string;
 }

@@ -32,6 +32,7 @@ function ProfileDropdown({ userId, photo }: Props) {
     //TODO: 서버 에러로 로그아웃 안되었을때 route handler로 refresh token 지워줘야됨
     toast.success(authMessages.LOGOUT);
     router.replace("/");
+    router.refresh();
   }, [router]);
 
   return (

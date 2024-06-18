@@ -56,5 +56,5 @@ export const clientInstance = async <T>({
 
   const data = await response.json();
 
-  return data as Promise<T>;
+  return data as T;
 };

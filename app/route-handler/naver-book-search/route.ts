@@ -1,3 +1,4 @@
+import { BookSearchResponse } from "api-domain";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -6,7 +7,7 @@ export async function GET(request: NextRequest) {
   const display = searchParams.get("display") ?? "10";
   const start = searchParams.get("start") ?? "1";
 
-  const res = await fetch(
+  const data = await fetch(
     `${process.env.NAVER_BOOK_SEARCH_URL}?query=${query}&display=${display}&start=${start}`,
     {
       headers: {
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
         "X-Naver-Client-Secret": `${process.env.NAVER_CLIENT_SECRET}`,
       },
     },
-  );
+  ).then((res) => res.json() as Promise<{ data: BookSearchResponse }>);
 
-  return res.json();
+  return Response.json(data);
 }

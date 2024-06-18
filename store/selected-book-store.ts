@@ -1,4 +1,3 @@
-//FIXME: 이후 orval 생성 파일로 변경
 import { BookDetail } from "api-domain";
 import { create } from "zustand";
 
@@ -15,5 +14,5 @@ const initialState = {
 export const useSelectedBookStore = create<SelectedBookStore>()((set) => ({
   ...initialState,
   setSelectedBook: (selectedBook) => set({ selectedBook }),
-  reset: () => set(() => initialState),
+  reset: () => set(initialState),
 }));

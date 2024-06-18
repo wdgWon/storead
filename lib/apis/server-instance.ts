@@ -8,7 +8,7 @@ import { baseInstance } from "./base-instance";
 
 export const serverInstance = async ({
   endPoint,
-  method,
+  method = "GET",
   params,
   headers = new Headers(),
   body,
@@ -16,7 +16,7 @@ export const serverInstance = async ({
   includeAuth = true,
 }: {
   endPoint: string;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   params?: URLSearchParams;
   body?: BodyInit;
   headers?: Headers;

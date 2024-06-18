@@ -17,5 +17,5 @@ export const useHeaderProgressStore = create<HeaderProgressStore>()((set) => ({
   ...initialState,
   setScrollProgress: (progress) => set({ scrollProgress: progress }),
   setIsShow: (show) => set({ isShow: show }),
-  reset: () => set(() => initialState),
+  reset: () => set(initialState),
 }));

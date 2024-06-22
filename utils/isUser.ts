@@ -1,6 +1,6 @@
 import { ACCESS_TOKEN } from "@/constants/identifier";
-import { getClientCookies } from "@/lib/getClientCookies";
-import { getServerCookies } from "@/lib/getServerCookies";
+import { getClientCookies } from "@/lib/clientCookies";
+import { getServerCookies } from "@/lib/serverCookies";
 
 export const isUserExpired = () => {
   if (typeof window !== undefined) {

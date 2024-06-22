@@ -1,10 +1,13 @@
+import {
+  RequestCookies,
+  ResponseCookies,
+} from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import {
   ACCESS_TOKEN,
-  IS_USER,
   LOGIN_TOAST,
   MAIN_TOAST,
   REFRESH_TOKEN,
@@ -19,15 +22,12 @@ const userNotAllowedUrl = new Set(["/login"]);
 
 /**
  * @description 인증관련 미들웨어
- * TODO: isUser 쿠키 세팅 로직 삭제
  */
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next();
   const cookieStore = cookies();
-  const [access_token, refresh_token] = [
-    cookieStore.get(ACCESS_TOKEN)?.value,
-    cookieStore.get(REFRESH_TOKEN)?.value,
-  ];
+  const access_token = cookieStore.get(ACCESS_TOKEN)?.value;
+  const refresh_token = cookieStore.get(REFRESH_TOKEN)?.value;
 
   if (protectedUrl.has(request.nextUrl.pathname)) {
     if (!refresh_token) {
@@ -39,15 +39,21 @@ export async function middleware(request: NextRequest) {
 
     const res = await serverVerify(access_token);
 
-    if (res.status === 401) {
+    if (!res.ok) {
       const refreshRes = await serverRefresh(refresh_token);
 
-      if (refreshRes.status === 401) {
+      if (!refreshRes.ok) {
         response = NextResponse.redirect(new URL("/login", request.url));
         response.cookies.set(LOGIN_TOAST, authMessages.TOKEN_EXPIRED);
       }
 
       const setCookies = refreshRes.headers.getSetCookie();
+
+      const accessToken = findAccessTokenFromSetCookies(setCookies);
+
+      if (accessToken) {
+        response.cookies.set(ACCESS_TOKEN, accessToken);
+      }
 
       response.headers.set("Set-Cookie", setCookies.join(", "));
     }
@@ -55,32 +61,27 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // 액세스 토큰 만료시 재발급
   if (access_token == null && refresh_token) {
     const refreshRes = await serverRefresh(refresh_token);
 
-    if (!refreshRes.ok && request.cookies.get(IS_USER)) {
-      request.cookies.delete(IS_USER);
-    }
-
     if (refreshRes.ok) {
-      const setCookie = refreshRes.headers.getSetCookie();
-      response.headers.set("Set-Cookie", setCookie.join(", "));
+      const setCookies = refreshRes.headers.getSetCookie();
 
-      if (!request.cookies.get(IS_USER)) {
-        response.cookies.set(IS_USER, "true");
+      const accessToken = findAccessTokenFromSetCookies(setCookies);
+
+      if (accessToken) {
+        response.cookies.set(ACCESS_TOKEN, accessToken);
       }
+
+      response.headers.set("Set-Cookie", setCookies.join(", "));
     }
   }
 
-  if (refresh_token && !request.cookies.get(IS_USER)) {
-    response.cookies.set(IS_USER, "true");
-  } else {
-    request.cookies.delete(IS_USER);
-  }
-
+  // 유저가 접근하면 안되는 경로 처리
   if (
     userNotAllowedUrl.has(request.nextUrl.pathname) &&
-    request.cookies.get(IS_USER)
+    refresh_token != null
   ) {
     response = NextResponse.redirect(new URL("/", request.url));
     response.cookies.set(MAIN_TOAST, authMessages.USER_NOT_ALLOWED);
@@ -88,3 +89,31 @@ export async function middleware(request: NextRequest) {
 
   return response;
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - route-handler (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!route-handler|_next/static|_next/image|favicon.ico).*)",
+  ],
+};
+
+const findAccessTokenFromSetCookies = (setCookies: string[]) => {
+  const accessTokenCookie = setCookies.find((cookie) =>
+    cookie.startsWith(ACCESS_TOKEN),
+  );
+
+  if (accessTokenCookie) {
+    const cookieValue = accessTokenCookie.split(";")[0];
+    const accessToken = cookieValue.split("=")[1];
+
+    return accessToken;
+  }
+
+  return null;
+};

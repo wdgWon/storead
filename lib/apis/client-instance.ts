@@ -1,60 +1,70 @@
 "use client";
 
-import Cookies from "js-cookie";
-
 import { ACCESS_TOKEN, LOGIN_TOAST } from "@/constants/identifier";
 import { authMessages } from "@/constants/toastMessages";
+import { findAccessTokenFromSetCookies } from "@/utils/findAccessTokenFromSetCookies";
 
-import { baseInstance } from "./base-instance";
+import { getClientCookies, setClientCookies } from "../clientCookies";
+import { InstanceInit, baseInstance } from "./base-instance";
 
 export const clientInstance = async <T>({
   endPoint,
   method = "GET",
   params,
-  headers = new Headers(),
-  body,
-  init,
   includeAuth = true,
-}: {
-  endPoint: string;
-  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  params?: URLSearchParams;
-  body?: BodyInit;
-  headers?: Headers;
-  init?: RequestInit;
-  includeAuth?: boolean;
-}) => {
-  const originalRequest = () => {
+  ...init
+}: InstanceInit) => {
+  const originalRequest = (accessToken?: string | null) => {
+    const payload = {
+      method,
+      ...init,
+    };
+
     if (includeAuth) {
-      headers?.append("Authorization", `Bearer ${Cookies.get(ACCESS_TOKEN)}`);
+      if (!accessToken)
+        return Promise.resolve(new Response(null, { status: 401 }));
+
+      payload.headers = {
+        Authorization: `Bearer ${accessToken}`,
+        ...payload.headers,
+      };
     }
 
-    return baseInstance({
+    const promise = baseInstance({
       endPoint,
-      payload: { method, headers, body, ...init },
+      payload,
       params,
     });
+
+    return promise;
   };
 
-  const response = await originalRequest();
+  const accessToken = getClientCookies(ACCESS_TOKEN);
+
+  const response = await originalRequest(accessToken);
 
   if (response.status === 401) {
     const refreshRes = await baseInstance({
       endPoint: `/auth/tokens/refresh`,
-      payload: { method: "GET", headers, cache: "no-store" },
+      payload: { method: "GET", cache: "no-store" },
     });
 
-    if (refreshRes.ok) {
-      return refreshRes.json() as Promise<T>;
-    }
-
-    if (refreshRes.status === 401) {
-      Cookies.set(LOGIN_TOAST, authMessages.TOKEN_EXPIRED);
+    if (!refreshRes.ok) {
+      setClientCookies(LOGIN_TOAST, authMessages.TOKEN_EXPIRED);
       window.history.pushState(null, "", "/login");
     }
+
+    const setCookies = refreshRes.headers.getSetCookie();
+    const verifiedAccessToken = findAccessTokenFromSetCookies(setCookies);
+
+    const verifiedData = await originalRequest(verifiedAccessToken).then(
+      (res) => res.json() as Promise<T>,
+    );
+
+    return verifiedData;
   }
 
-  const data = await response.json();
+  const data = await (response.json() as Promise<T>);
 
-  return data as T;
+  return data;
 };

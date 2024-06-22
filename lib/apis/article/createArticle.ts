@@ -12,7 +12,8 @@ export const createArticle = async (payload: RequestArticleList) => {
     endPoint: `/articles`,
     method: "POST",
     body: JSON.stringify(payload),
-    init: { cache: "no-store" },
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
   });
 
   return res;

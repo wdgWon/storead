@@ -8,7 +8,7 @@ export const userProfileQueryOption = (id: string) => ({
     clientInstance<{ status_code: number; profile: Profile }>({
       endPoint: `/profiles/${id}`,
       method: "GET",
-      init: { cache: "no-store" },
+      cache: "no-store",
       includeAuth: false,
     }).then((data) => data.profile),
 });

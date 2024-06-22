@@ -8,6 +8,6 @@ export const myProfileQueryOption = {
     clientInstance<{ status_code: number; profile: Profile }>({
       endPoint: `/profiles/me`,
       method: "GET",
-      init: { cache: "no-store" },
+      cache: "no-store",
     }).then((data) => data.profile),
 };

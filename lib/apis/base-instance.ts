@@ -4,6 +4,12 @@ export type BaseInstancePayload = {
   params?: URLSearchParams;
 };
 
+export interface InstanceInit extends RequestInit {
+  endPoint: string;
+  params?: URLSearchParams;
+  includeAuth?: boolean;
+}
+
 export const baseInstance = async ({
   endPoint,
   payload,

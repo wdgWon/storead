@@ -6,7 +6,7 @@ export const logout = async () => {
   const response = await clientInstance<{ message: string }>({
     endPoint: `/auth/logout`,
     method: "POST",
-    init: { cache: "no-store" },
+    cache: "no-store",
   });
   return response;
 };

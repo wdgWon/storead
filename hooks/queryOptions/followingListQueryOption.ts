@@ -8,6 +8,6 @@ export const followingListQueryOption = {
     clientInstance<FollowList>({
       endPoint: `/profiles/me/following`,
       method: "GET",
-      init: { cache: "no-store" },
+      cache: "no-store",
     }),
 };

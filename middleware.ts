@@ -15,6 +15,7 @@ import {
 import { authMessages } from "./constants/toastMessages";
 import { serverRefresh } from "./lib/apis/auth/serverRefresh";
 import { serverVerify } from "./lib/apis/auth/serverVerify";
+import { findAccessTokenFromSetCookies } from "./utils/findAccessTokenFromSetCookies";
 
 const protectedUrl = new Set(["/review-form"]);
 
@@ -101,19 +102,4 @@ export const config = {
      */
     "/((?!route-handler|_next/static|_next/image|favicon.ico).*)",
   ],
-};
-
-const findAccessTokenFromSetCookies = (setCookies: string[]) => {
-  const accessTokenCookie = setCookies.find((cookie) =>
-    cookie.startsWith(ACCESS_TOKEN),
-  );
-
-  if (accessTokenCookie) {
-    const cookieValue = accessTokenCookie.split(";")[0];
-    const accessToken = cookieValue.split("=")[1];
-
-    return accessToken;
-  }
-
-  return null;
 };

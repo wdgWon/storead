@@ -1,8 +1,10 @@
 "use client";
 
-import RichEditor from "../rich-editor/rich-editor";
+// import RichEditor from "../rich-editor/rich-editor";
 import { Form } from "../ui/form";
-import Period from "./components/period";
+import ReviewButtonGroup from "./components/review-button-group";
+// import Period from "./components/period";
+import ReviewEditor from "./components/review-editor";
 import SelectedBookCard from "./components/selected-book-card";
 import Tags from "./components/tags";
 import Title from "./components/title";
@@ -36,12 +38,9 @@ function ReviewForm() {
             <Title />
             <Tags />
             {/* <Period /> */}
-            <RichEditor ref={richEditorRef} />
+            <ReviewEditor ref={richEditorRef} />
+            <ReviewButtonGroup />
           </div>
-          <input
-            type="submit"
-            value="확인"
-          />
         </div>
       </form>
     </Form>

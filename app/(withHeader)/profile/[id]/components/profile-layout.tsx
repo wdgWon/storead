@@ -26,8 +26,6 @@ function ProfileLayout({ id }: Props) {
     userProfileQueryOption(id),
   );
 
-  console.log(myProfile, userProfile);
-
   if (isMyPending || isUserPending) return <Skeleton className="w-12 h-12" />;
 
   return (

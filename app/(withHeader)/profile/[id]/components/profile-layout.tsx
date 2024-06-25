@@ -1,7 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
-
 import { useQuery } from "@tanstack/react-query";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,11 +32,7 @@ function ProfileLayout({ id }: Props) {
         imageUrl={userProfile?.profile_photo || myProfile?.profile_photo}
       />
       <UserName name={userProfile?.name || myProfile?.name} />
-      {myProfile?.user_id === id && (
-        <Suspense fallback={<Skeleton />}>
-          <Follow />
-        </Suspense>
-      )}
+      <Follow profileId={id} />
       <Introduce introduce={userProfile?.about_me || myProfile?.about_me} />
     </>
   );

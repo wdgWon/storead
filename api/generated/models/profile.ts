@@ -11,4 +11,5 @@ export type Profile = {
   name: string;
   readonly profile_photo: string;
   user_id: string;
+  profile_id: string;
 };

@@ -18,4 +18,13 @@ declare module "api-domain" {
     isbn: string;
     description: string;
   };
+
+  export type CommonResponse<T> = {
+    status_code: number;
+    status: boolean;
+    results: {
+      message: string;
+      data: T;
+    };
+  };
 }

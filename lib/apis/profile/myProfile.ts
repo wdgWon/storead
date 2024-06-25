@@ -1,5 +1,6 @@
 "use server";
 
+import { CommonResponse } from "api-domain";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
@@ -24,8 +25,8 @@ export const getMyProfile = async () => {
     return null;
   }
 
-  const profile = ((await res.json()) as { status: number; profile: Profile })
-    .profile;
+  const data = (await (res.json() as Promise<CommonResponse<Profile>>)).results
+    .data;
 
-  return profile;
+  return data;
 };

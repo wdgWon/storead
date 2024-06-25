@@ -11,7 +11,7 @@ async function AuthMenu() {
     <>
       {user ? (
         <ProfileDropdown
-          userId={user.user_id}
+          userId={user.profile_id}
           photo={user.profile_photo}
         />
       ) : (

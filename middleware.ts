@@ -1,7 +1,3 @@
-import {
-  RequestCookies,
-  ResponseCookies,
-} from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -76,6 +72,13 @@ export async function middleware(request: NextRequest) {
       }
 
       response.headers.set("Set-Cookie", setCookies.join(", "));
+    }
+
+    if (refreshRes.status === 401) {
+      response = NextResponse.redirect(new URL("/", request.url));
+      response.cookies.delete(REFRESH_TOKEN);
+
+      return response;
     }
   }
 

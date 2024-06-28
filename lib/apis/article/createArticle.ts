@@ -1,14 +1,13 @@
 "use client";
 
-import {
-  PaginatedArticleList,
-  RequestArticleList,
-} from "@/api/generated/models";
+import { Article, RequestArticleList } from "@/api/generated/models";
 
 import { clientInstance } from "../client-instance";
 
-export const createArticle = async (payload: RequestArticleList) => {
-  const res = await clientInstance<PaginatedArticleList>({
+export const createArticle = async (
+  payload: RequestArticleList & { slug?: string },
+) => {
+  const res = await clientInstance<Article>({
     endPoint: `/articles`,
     method: "POST",
     body: JSON.stringify(payload),

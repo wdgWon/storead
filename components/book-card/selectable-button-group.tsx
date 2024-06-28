@@ -29,7 +29,7 @@ function SelectableButtonGroup(props: BookDetail) {
           선택하기
         </Button>
       )}
-      <Button>
+      <Button type="button">
         <a
           href={props.link}
           target="blank"

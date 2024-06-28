@@ -30,10 +30,7 @@ function ReviewForm() {
               selectedBook={selectedBook}
             />
           </div>
-          <div
-            role="review container"
-            className="mt-8 flex flex-col gap-8"
-          >
+          <div className="mt-8 flex flex-col gap-8">
             <h2 className="font-bold text-lg">서평 작성</h2>
             <Title />
             <Tags />

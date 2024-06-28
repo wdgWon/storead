@@ -26,7 +26,9 @@ export function BookCardMain(props: Props & PropsWithChildren) {
         <h2 className="font-bold text-lg">{props.title}</h2>
         <h3 className="font-light">{props.author}</h3>
         <p className="max-w-[500px] font-sans font-extralight flex-grow text-overflow">
-          {props.description}
+          {props.description.length > 20
+            ? `${props.description.slice(0, 40)}...`
+            : props.description}
         </p>
         {props.children}
       </div>

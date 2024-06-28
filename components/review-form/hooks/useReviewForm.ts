@@ -5,6 +5,7 @@ import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import { RichEditorRef } from "@/components/rich-editor/rich-editor";
 import { useSelectBook } from "@/hooks/useSelectBook";
@@ -21,6 +22,7 @@ export type ReviewFormValue = {
 };
 
 export const useReviewForm = () => {
+  const router = useRouter();
   const bookSearchRef = useRef<HTMLDivElement>(null);
   const richEditorRef = useRef<RichEditorRef>(null);
   const form = useForm<ReviewFormValue>({
@@ -57,13 +59,17 @@ export const useReviewForm = () => {
     //FIXME: 본문 내용을 요약한 내용 출력 (현재는 값이 링크든 뭐든 그냥 넣는중)
     const text = richEditorRef.current?.getText()?.slice(0, 30);
 
-    await createArticle({
+    const article = await createArticle({
       body: JSON.stringify(body),
       book: bookDetail.id,
       description: text || form.getValues("title"),
       tags,
       title: form.getValues("title"),
+      //FIXME: slug 안넣어도 되게 서버 수정중
+      slug: form.getValues("title").replace(/\s/g, "-"),
     });
+
+    router.replace(`/review-detail/${article.id}`);
   };
 
   return {

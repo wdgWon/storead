@@ -27,6 +27,12 @@ const nextConfig = {
         hostname: "shopping-phinf.pstatic.net",
         port: "",
       },
+      //FIXME: 사진 url 반영되면 수정
+      {
+        protocol: "http",
+        hostname: "api.storead.site",
+        port: "",
+      },
     ],
   },
 };

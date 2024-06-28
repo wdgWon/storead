@@ -23,10 +23,10 @@ function Comments({ isUser, articleId }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      {isUser && <CommentForm />}
+      {isUser && <CommentForm articleId={articleId} />}
       <Separator />
       <CommentList
-        articleId={articleId}
+        key={articleId}
         comments={comments}
       />
     </div>

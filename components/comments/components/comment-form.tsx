@@ -5,17 +5,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { addCommentMutationOption } from "@/hooks/mutationOptions/addCommentMutationOption";
+import { commentListQueryOption } from "@/hooks/queryOptions/commentListQueryOption";
+
+interface Props {
+  articleId: string;
+}
 
 const formSchema = z.object({
   content: z.string().min(2, {
@@ -23,7 +29,9 @@ const formSchema = z.object({
   }),
 });
 
-function CommentForm() {
+function CommentForm({ articleId }: Props) {
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,8 +39,44 @@ function CommentForm() {
     },
   });
 
+  const { mutate } = useMutation({
+    ...addCommentMutationOption(articleId),
+    // onMutate: async (comment: CommentPayload) => {
+    //   await queryClient.cancelQueries({
+    //     queryKey: commentListQueryOption(articleId).queryKey,
+    //   });
+
+    //   const previousComments = queryClient.getQueryData(
+    //     commentListQueryOption(articleId).queryKey,
+    //   );
+
+    //   queryClient.setQueryData(
+    //     commentListQueryOption(articleId).queryKey,
+    //     (old: any) => {
+    //       return [...old, { ...comment, id: "temp-id-" + Date.now() }];
+    //     },
+    //   );
+
+    //   return { previousComments };
+    // },
+    // onError: (err, newComment, context) => {
+    //   // If the mutation fails, use the context returned from onMutate to roll back
+    //   queryClient.setQueryData(
+    //     commentListQueryOption(articleId).queryKey,
+    //     context?.previousComments,
+    //   );
+    // },
+    onMutate: () => form.reset(),
+    onSuccess: () => {
+      // Always refetch after error or success:
+      queryClient.invalidateQueries({
+        queryKey: commentListQueryOption(articleId).queryKey,
+      });
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    mutate({ content: values.content });
   }
 
   return (
@@ -49,18 +93,14 @@ function CommentForm() {
               <FormLabel>댓글 입력</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="shadcn"
+                  placeholder="댓글을 입력해주세요..."
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

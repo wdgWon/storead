@@ -5,16 +5,28 @@ import { LuDot } from "react-icons/lu";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { followerListQueryOption } from "@/hooks/queryOptions/followerListQueryOption";
 import { followingListQueryOption } from "@/hooks/queryOptions/followingListQueryOption";
 
-function Follow() {
-  const { data: followerList } = useSuspenseQuery({
-    ...followerListQueryOption,
-  });
-  const { data: followingList } = useSuspenseQuery({
-    ...followingListQueryOption,
-  });
+interface Props {
+  profileId: string;
+}
+
+function Follow({ profileId }: Props) {
+  const { data: followerList, isPending: isFollowerPending } = useSuspenseQuery(
+    {
+      ...followerListQueryOption(profileId),
+    },
+  );
+  const { data: followingList, isPending: isFollowingPending } =
+    useSuspenseQuery({
+      ...followingListQueryOption(profileId),
+    });
+
+  if (isFollowerPending || isFollowingPending) {
+    return <Skeleton className="w-24 h-8" />;
+  }
 
   return (
     <div className="flex items-center gap-2">

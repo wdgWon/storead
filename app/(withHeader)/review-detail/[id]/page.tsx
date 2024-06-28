@@ -1,21 +1,22 @@
-import { cookies } from "next/headers";
-
 import { BookCard } from "@/components/book-card";
 import Comments from "@/components/comments/comments";
-import { ACCESS_TOKEN } from "@/constants/identifier";
+import RichEditorViewer from "@/components/rich-editor/rich-editor-viewer";
 import { getArticleDetail } from "@/lib/apis/article/retrieveSingleArticle";
+import { getMyProfile } from "@/lib/apis/profile/myProfile";
 
 interface Props {
   params: { id: string };
 }
 
 async function ReviewDetail({ params: { id } }: Props) {
-  const article = await getArticleDetail(id);
-  const isUser = cookies().has(ACCESS_TOKEN);
+  const [article, profile] = await Promise.all([
+    getArticleDetail(id),
+    getMyProfile(),
+  ]);
 
   return (
-    <div className="flex flex-col">
-      <span>{article.title}</span>
+    <div className="mt-8 flex flex-col gap-8">
+      <h2 className="font-bold text-lg">{article.title}</h2>
       <BookCard
         title={article.book.title}
         image={article.book.thumbnail_url}
@@ -23,10 +24,10 @@ async function ReviewDetail({ params: { id } }: Props) {
         description={article.book.description}
       />
       {/* FIXME: 에디터 뷰어로 출력 */}
-      <span>{article.body}</span>
+      <RichEditorViewer content={JSON.parse(article.body)} />
       <Comments
         articleId={id}
-        isUser={isUser}
+        isUser={Boolean(profile)}
       />
     </div>
   );

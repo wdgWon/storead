@@ -3,16 +3,18 @@
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -39,36 +41,10 @@ function CommentForm({ articleId }: Props) {
     },
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...addCommentMutationOption(articleId),
-    // onMutate: async (comment: CommentPayload) => {
-    //   await queryClient.cancelQueries({
-    //     queryKey: commentListQueryOption(articleId).queryKey,
-    //   });
-
-    //   const previousComments = queryClient.getQueryData(
-    //     commentListQueryOption(articleId).queryKey,
-    //   );
-
-    //   queryClient.setQueryData(
-    //     commentListQueryOption(articleId).queryKey,
-    //     (old: any) => {
-    //       return [...old, { ...comment, id: "temp-id-" + Date.now() }];
-    //     },
-    //   );
-
-    //   return { previousComments };
-    // },
-    // onError: (err, newComment, context) => {
-    //   // If the mutation fails, use the context returned from onMutate to roll back
-    //   queryClient.setQueryData(
-    //     commentListQueryOption(articleId).queryKey,
-    //     context?.previousComments,
-    //   );
-    // },
     onMutate: () => form.reset(),
     onSuccess: () => {
-      // Always refetch after error or success:
       queryClient.invalidateQueries({
         queryKey: commentListQueryOption(articleId).queryKey,
       });
@@ -80,29 +56,49 @@ function CommentForm({ articleId }: Props) {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
-      >
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>댓글 입력</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="댓글을 입력해주세요..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <Card className="w-full">
+      <CardContent className="pt-6">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        placeholder="댓글을 입력해주세요..."
+                        disabled={isPending}
+                        className="flex-grow"
+                        {...field}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={isPending}
+                      >
+                        {isPending ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            전송 중
+                          </>
+                        ) : (
+                          "댓글 작성"
+                        )}
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
 

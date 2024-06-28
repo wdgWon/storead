@@ -2,10 +2,11 @@
 
 import { useQuery } from "@tanstack/react-query";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { commentListQueryOption } from "@/hooks/queryOptions/commentListQueryOption";
 
-import { Separator } from "../ui/separator";
-import { Skeleton } from "../ui/skeleton";
 import CommentForm from "./components/comment-form";
 import CommentList from "./components/comment-list";
 
@@ -19,17 +20,32 @@ function Comments({ isUser, articleId }: Props) {
     commentListQueryOption(articleId),
   );
 
-  if (isPending) return <Skeleton className="w-full h-4" />;
-
   return (
-    <div className="flex flex-col gap-4">
-      {isUser && <CommentForm articleId={articleId} />}
-      <Separator />
-      <CommentList
-        key={articleId}
-        comments={comments}
-      />
-    </div>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>댓글</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {isUser && (
+          <>
+            <CommentForm articleId={articleId} />
+            <Separator className="my-6" />
+          </>
+        )}
+        {isPending ? (
+          <div className="space-y-2">
+            <Skeleton className="w-full h-12" />
+            <Skeleton className="w-full h-12" />
+            <Skeleton className="w-full h-12" />
+          </div>
+        ) : (
+          <CommentList
+            key={articleId}
+            comments={comments}
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 }
 

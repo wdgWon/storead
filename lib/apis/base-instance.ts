@@ -21,7 +21,7 @@ export const baseInstance = async ({
       : `${process.env.NEXT_PUBLIC_VARIABLE_URL}`;
 
   const response = await fetch(
-    `${baseUrl}${endPoint}` + (params ? `?${params}` : ""),
+    `${baseUrl}${endPoint}` + (params && params.size > 0 ? `?${params}` : ""),
     payload,
   );
 

@@ -13,6 +13,9 @@ export const addComment = async (
   const res = await clientInstance<Comment>({
     endPoint: `/comments/article/${articleId}`,
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(comment),
   });
 

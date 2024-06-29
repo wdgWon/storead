@@ -8,9 +8,9 @@
 
 export type SearchArticlesListParams = {
   /**
-   * 결과 정렬 순서를 지정합니다.
+   * 결과 정렬 순서를 지정합니다. (최신순 | 과거순 | 조회순)
    */
-  ordering?: string;
+  ordering?: "-created_at" | "created_at" | "-view_count";
   /**
    * A page number within the paginated result set.
    */

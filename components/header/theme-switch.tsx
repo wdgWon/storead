@@ -18,16 +18,13 @@ function ThemeSwitch() {
   if (!mounted) return null;
 
   return (
-    <div className="flex gap-2 justify-center items-center">
-      <label
-        htmlFor="theme-switch"
-        className="relative h-[1.2rem] w-[1.2rem]"
-      >
-        <Sun className="w-full h-full rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        <Moon className="absolute w-full h-full top-0 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      </label>
+    <div className="flex w-full justify-between items-center">
+      <div className="flex items-center">
+        <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <span className="ml-2 text-sm">다크모드</span>
+      </div>
       <Switch
-        id="theme-switch"
         checked={theme === "dark"}
         onCheckedChange={(isChecked) => setTheme(isChecked ? "dark" : "light")}
       />

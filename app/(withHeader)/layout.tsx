@@ -8,7 +8,6 @@ function WithHeaderLayout({ children }: PropsWithChildren) {
     <>
       <Header />
       {children}
-      <div className="flex-grow"></div>
       <Footer />
     </>
   );

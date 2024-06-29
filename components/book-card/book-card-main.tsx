@@ -1,6 +1,5 @@
 import { PropsWithChildren } from "react";
 
-import { BookDetail } from "api-domain";
 import Image from "next/image";
 
 interface Props {

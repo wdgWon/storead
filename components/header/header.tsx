@@ -12,7 +12,6 @@ function Header() {
           <Logo />
           <div className="flex-grow" />
           <div className="flex items-center font-bold text-lg gap-6">
-            <ThemeSwitch />
             <WriteButton />
             <AuthMenu />
           </div>
